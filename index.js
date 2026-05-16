@@ -544,7 +544,7 @@ async function iniciarBot() {
     
    client = new Client({
     authStrategy: new LocalAuth({
-        dataPath: './session'  // 👈 carpeta fija
+        dataPath: './session-data'  // Carpeta donde Railway guardará la sesión
     }),
     puppeteer: { 
         headless: true,
