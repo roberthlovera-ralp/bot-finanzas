@@ -1,5 +1,8 @@
 require('dotenv').config({ debug: true });
 
+// Detectar si está en Railway
+const IS_RAILWAY = process.env.RAILWAY_ENVIRONMENT === 'production';
+
 // ===== CONFIGURACIÓN PARA WHATSAPP =====
 process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = false;
 // =======================================
@@ -540,17 +543,16 @@ async function iniciarBot() {
     console.log('🚀 Creando cliente de WhatsApp...');
     
     client = new Client({
-        authStrategy: new LocalAuth(),
-        puppeteer: { 
-            headless: false,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        },
-        webVersionCache: {
-            type: 'remote',
-            remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1030406899.html',
-        }
-    });
-    
+    authStrategy: new LocalAuth(),
+    puppeteer: { 
+        headless: IS_RAILWAY ? true : false,  // 👈 Railway usa true, tu PC usa false
+        args: IS_RAILWAY ? ['--no-sandbox', '--disable-setuid-sandbox'] : ['--no-sandbox']
+    },
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1030406899.html',
+    }
+});    
     client.on('qr', (qr) => {
         console.log('📱 ESCANEA ESTE QR CON WHATSAPP:');
         qrcode.generate(qr, { small: true });
