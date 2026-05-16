@@ -544,17 +544,24 @@ async function iniciarBot() {
     
    client = new Client({
     authStrategy: new LocalAuth({
-        dataPath: './session-data'  // Carpeta donde Railway guardará la sesión
+        dataPath: './session-data'
     }),
     puppeteer: { 
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage'
+        ],
+        timeout: 120000  // 2 minutos de espera
     },
     webVersionCache: {
         type: 'remote',
         remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.3000.1030406899.html',
-    }
+    },
+    authTimeoutMs: 120000  // 2 minutos para autenticación
 });
+
 
     client.on('qr', (qr) => {
     console.log('📱 ESCANEA ESTE QR CON WHATSAPP:');
